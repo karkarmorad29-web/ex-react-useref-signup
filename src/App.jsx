@@ -1,13 +1,16 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const letters = "abcdefghijklmnopqrstuvwxyz";
 const numbers = "0123456789";
 const symbols = "!@#$%^&*()-_=+[]{}|;:'\"\\,.<>?/`~";
 
 function App() {
+  const formTopRef = useRef(null);
   const fullNameRef = useRef(null);
   const specializationRef = useRef(null);
   const experienceRef = useRef(null);
+
+
   const [description, setDescription] = useState('');
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
@@ -71,9 +74,25 @@ function App() {
     });
   }
 
+  useEffect(() => {
+    fullNameRef.current.focus();
+  }, []);
+
+  const resetForm = e => {
+    e.preventDefault();
+    setUserName('');
+    setPassword('');
+    setDescription('');
+    fullNameRef.current.value = '';
+    specializationRef.current.value = '';
+    experienceRef.current.value = '';
+    fullNameRef.current.focus();
+  }
+
   return (
     <div>
 
+      <div ref={formTopRef} />
       <h1>Web developr</h1>
       <form onSubmit={handleSubmit}>
         <label>
@@ -137,9 +156,17 @@ function App() {
 
           )}
         </label>
-
         <button type="submit">Registrati</button>
+        <button type="button" className="reset-button" onClick={resetForm}>Reset</button>
       </form>
+      <button
+        type="button"
+        className="scroll-top-button"
+        onClick={() => formTopRef.current?.scrollIntoView({ behavior: 'smooth' })}
+        aria-label="Torna all'inizio del form"
+      >
+        ↑
+      </button>
     </div>
   );
 }
